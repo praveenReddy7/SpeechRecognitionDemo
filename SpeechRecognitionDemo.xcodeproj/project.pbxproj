@@ -12,6 +12,9 @@
 		AC659CED228C1C0000629641 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC659CEB228C1C0000629641 /* Main.storyboard */; };
 		AC659CEF228C1C0600629641 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC659CEE228C1C0600629641 /* Assets.xcassets */; };
 		AC659CF2228C1C0700629641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC659CF0228C1C0700629641 /* LaunchScreen.storyboard */; };
+		AC659CFA228C256000629641 /* CLVoiceRegcognitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC659CF9228C256000629641 /* CLVoiceRegcognitionController.swift */; };
+		AC659CFC228C265800629641 /* crm.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC659CFB228C265800629641 /* crm.ttf */; };
+		AC659CFE228C353B00629641 /* Microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = AC659CFD228C353B00629641 /* Microphone.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,9 @@
 		AC659CEE228C1C0600629641 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AC659CF1228C1C0700629641 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC659CF3228C1C0700629641 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC659CF9228C256000629641 /* CLVoiceRegcognitionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLVoiceRegcognitionController.swift; sourceTree = "<group>"; };
+		AC659CFB228C265800629641 /* crm.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = crm.ttf; sourceTree = "<group>"; };
+		AC659CFD228C353B00629641 /* Microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Microphone.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +62,9 @@
 			children = (
 				AC659CE7228C1C0000629641 /* AppDelegate.swift */,
 				AC659CE9228C1C0000629641 /* ViewController.swift */,
+				AC659CF9228C256000629641 /* CLVoiceRegcognitionController.swift */,
+				AC659CFB228C265800629641 /* crm.ttf */,
+				AC659CFD228C353B00629641 /* Microphone.png */,
 				AC659CEB228C1C0000629641 /* Main.storyboard */,
 				AC659CEE228C1C0600629641 /* Assets.xcassets */,
 				AC659CF0228C1C0700629641 /* LaunchScreen.storyboard */,
@@ -123,8 +132,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC659CF2228C1C0700629641 /* LaunchScreen.storyboard in Resources */,
+				AC659CFC228C265800629641 /* crm.ttf in Resources */,
 				AC659CEF228C1C0600629641 /* Assets.xcassets in Resources */,
 				AC659CED228C1C0000629641 /* Main.storyboard in Resources */,
+				AC659CFE228C353B00629641 /* Microphone.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC659CEA228C1C0000629641 /* ViewController.swift in Sources */,
+				AC659CFA228C256000629641 /* CLVoiceRegcognitionController.swift in Sources */,
 				AC659CE8228C1C0000629641 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,6 +295,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PF5TQ3AQ6W;
 				INFOPLIST_FILE = SpeechRecognitionDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -301,6 +314,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PF5TQ3AQ6W;
 				INFOPLIST_FILE = SpeechRecognitionDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
