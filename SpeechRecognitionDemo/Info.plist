@@ -47,5 +47,9 @@
 	<array>
 		<string>crm.ttf</string>
 	</array>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This is to search with voice option</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow microphone to record your voice</string>
 </dict>
 </plist>

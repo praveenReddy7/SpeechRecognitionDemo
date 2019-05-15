@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "Speech Recoginition Demo"
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +40,7 @@ class ViewController: UIViewController {
     }
     
     @objc func voiceSearchBtnTapped(_ sender: UIButton) {
-        let voiceRecognitionCtl = CLVoiceRecognitionController()
+        let voiceRecognitionCtl = CLSpeechRecognitionController()
         self.present(voiceRecognitionCtl, animated: true, completion: nil)
     }
 
