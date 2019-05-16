@@ -35,7 +35,7 @@ class PulseAnimation: CALayer {
         self.bounds = CGRect(x: 0, y: 0, width: radius*2, height: radius*2)
         self.cornerRadius = radius
         
-        DispatchQueue.global(qos: .default).async {
+        DispatchQueue.global(qos: .utility).async {
             self.setupAnimationGroup()
             DispatchQueue.main.async {
                 self.add(self.animationGroup, forKey: "pulse")
@@ -62,7 +62,7 @@ class PulseAnimation: CALayer {
     func setupAnimationGroup() {
         self.animationGroup.duration = animationDuration
         self.animationGroup.repeatCount = numebrOfPulse
-        let defaultCurve = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
+        let defaultCurve = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault) //CAMediaTimingFunctionName.default
         self.animationGroup.timingFunction = defaultCurve
         self.animationGroup.animations = [scaleAnimation(),createOpacityAnimation()]
     }

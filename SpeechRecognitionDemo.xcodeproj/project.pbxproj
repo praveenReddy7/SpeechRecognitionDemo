@@ -14,6 +14,7 @@
 		AC659CF2228C1C0700629641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC659CF0228C1C0700629641 /* LaunchScreen.storyboard */; };
 		AC659CFA228C256000629641 /* CLSpeechRecognitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC659CF9228C256000629641 /* CLSpeechRecognitionController.swift */; };
 		AC659CFC228C265800629641 /* crm.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC659CFB228C265800629641 /* crm.ttf */; };
+		AC7AE269228D1E2000BEB942 /* PulseAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7AE268228D1E2000BEB942 /* PulseAnimation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		AC659CF3228C1C0700629641 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC659CF9228C256000629641 /* CLSpeechRecognitionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLSpeechRecognitionController.swift; sourceTree = "<group>"; };
 		AC659CFB228C265800629641 /* crm.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = crm.ttf; sourceTree = "<group>"; };
+		AC7AE268228D1E2000BEB942 /* PulseAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulseAnimation.swift; sourceTree = "<group>"; };
+		AC7AE26B228D24C400BEB942 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +47,7 @@
 			children = (
 				AC659CE6228C1C0000629641 /* SpeechRecognitionDemo */,
 				AC659CE5228C1C0000629641 /* Products */,
+				AC7AE26A228D24C300BEB942 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +65,7 @@
 				AC659CE7228C1C0000629641 /* AppDelegate.swift */,
 				AC659CE9228C1C0000629641 /* ViewController.swift */,
 				AC659CF9228C256000629641 /* CLSpeechRecognitionController.swift */,
+				AC7AE268228D1E2000BEB942 /* PulseAnimation.swift */,
 				AC659CFB228C265800629641 /* crm.ttf */,
 				AC659CEB228C1C0000629641 /* Main.storyboard */,
 				AC659CEE228C1C0600629641 /* Assets.xcassets */,
@@ -68,6 +73,14 @@
 				AC659CF3228C1C0700629641 /* Info.plist */,
 			);
 			path = SpeechRecognitionDemo;
+			sourceTree = "<group>";
+		};
+		AC7AE26A228D24C300BEB942 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AC7AE26B228D24C400BEB942 /* QuartzCore.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC7AE269228D1E2000BEB942 /* PulseAnimation.swift in Sources */,
 				AC659CEA228C1C0000629641 /* ViewController.swift in Sources */,
 				AC659CFA228C256000629641 /* CLSpeechRecognitionController.swift in Sources */,
 				AC659CE8228C1C0000629641 /* AppDelegate.swift in Sources */,
@@ -291,7 +305,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PF5TQ3AQ6W;
 				INFOPLIST_FILE = SpeechRecognitionDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -310,7 +324,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PF5TQ3AQ6W;
 				INFOPLIST_FILE = SpeechRecognitionDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

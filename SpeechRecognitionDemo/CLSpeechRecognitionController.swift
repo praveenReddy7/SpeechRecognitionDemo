@@ -14,8 +14,10 @@ protocol ISpeechRecognizerDelegate {
 }
 
 class CLSpeechRecognitionController: UIViewController {
-    
-    let searchLabel = UILabel()
+    private let indicatorLabel = UILabel()
+    private let searchLabel = UILabel()
+    private let micBtn = UIButton()
+
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))!
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
@@ -70,15 +72,13 @@ class CLSpeechRecognitionController: UIViewController {
         self.modalTransitionStyle = .crossDissolve
         self.modalPresentationStyle = .overCurrentContext
         
-        let indicatorLabel = UILabel()
         indicatorLabel.translatesAutoresizingMaskIntoConstraints = false
-        indicatorLabel.font = UIFont.systemFont(ofSize: 30, weight: .bold)
         indicatorLabel.text = "Listening..."
         indicatorLabel.textColor = .white
         view.addSubview(indicatorLabel)
         
-        indicatorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100).isActive = true
-        indicatorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        indicatorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        indicatorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         NSLayoutConstraint(item: indicatorLabel,
                            attribute: .centerY,
                            relatedBy: .equal,
@@ -88,7 +88,6 @@ class CLSpeechRecognitionController: UIViewController {
                            constant: 0).isActive = true
         indicatorLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        let micBtn = UIButton()
         micBtn.translatesAutoresizingMaskIntoConstraints = false
         micBtn.setImage(#imageLiteral(resourceName: "mic_image"), for: .normal)
         micBtn.addTarget(self, action: #selector(micBtnTapped(_:)), for: .touchUpInside)
@@ -99,17 +98,7 @@ class CLSpeechRecognitionController: UIViewController {
         micBtn.widthAnchor.constraint(equalToConstant: 60).isActive = true
         micBtn.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        let pulse = PulseAnimation(numberOfPulse: Float.infinity, radius: 100, postion: micBtn.center)
-        pulse.animationDuration = 1.0
-        pulse.backgroundColor = #colorLiteral(red: 0.2247976189, green: 0.4235115114, blue: 1, alpha: 1)
-        self.view.layer.insertSublayer(pulse, below: self.view.layer)
-        let pulse1 = PulseAnimation(numberOfPulse: 15, radius: 200, postion: micBtn.center)
-        pulse1.animationDuration = 1.4
-        pulse1.backgroundColor = #colorLiteral(red: 1, green: 0.3653766513, blue: 0.1507387459, alpha: 1)
-        self.view.layer.insertSublayer(pulse1, below: self.view.layer)
-        
         searchLabel.translatesAutoresizingMaskIntoConstraints = false
-        searchLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         searchLabel.textColor = .white
         searchLabel.numberOfLines = 0
         view.addSubview(searchLabel)
@@ -132,14 +121,42 @@ class CLSpeechRecognitionController: UIViewController {
         dismissBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         dismissBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
         speechRecognizer.delegate = self
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            indicatorLabel.font = UIFont.systemFont(ofSize: 26, weight: .light)
+            searchLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        } else {
+            indicatorLabel.font = UIFont.systemFont(ofSize: 16, weight: .light)
+            searchLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        }
     }
     
+    private func startPulseAnimation() {
+        DispatchQueue.main.async {
+            let pulse = PulseAnimation(numberOfPulse: Float.infinity, radius: 100, postion: self.view.center)
+            pulse.animationDuration = 1.0
+            pulse.backgroundColor = UIColor.init(red: 0/255, green: 218/255, blue: 168/255, alpha: 1).cgColor
+            self.view.layer.insertSublayer(pulse, below: self.view.layer)
+            let pulse1 = PulseAnimation(numberOfPulse: Float.infinity, radius: 200, postion: self.view.center)
+            pulse1.animationDuration = 1.0
+            pulse1.backgroundColor = UIColor.init(red: 0/255, green: 207/255, blue: 194/255, alpha: 1).cgColor
+            self.view.layer.insertSublayer(pulse1, below: self.view.layer)
+        }
+    }
+    
+    private func stopPulseAnimation() {
+        guard let sublayers = self.view.layer.sublayers else { return }
+        for pulse in sublayers where pulse.isKind(of: PulseAnimation.self) {
+            pulse.removeFromSuperlayer()
+        }
+    }
     
     private func startRecording() throws {
         if !audioEngine.isRunning {
             let timer = Timer(timeInterval: 5.0, target: self, selector: #selector(timerEnded), userInfo: nil, repeats: false)
             RunLoop.current.add(timer, forMode: .commonModes)
-            
+            self.startPulseAnimation()
+            self.micBtn.isEnabled = false
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(AVAudioSessionCategoryRecord)
             try audioSession.setMode(AVAudioSessionModeMeasurement)
@@ -147,7 +164,8 @@ class CLSpeechRecognitionController: UIViewController {
             
             recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
             
-           /* guard */let inputNode = audioEngine.inputNode/* else { fatalError("There was a problem with the audio engine") }*/
+           /* guard let inputNode = audioEngine.inputNode else { fatalError("There was a problem with the audio engine") }*/
+            let inputNode = audioEngine.inputNode
             guard let recognitionRequest = recognitionRequest else { fatalError("Unable to create the recognition request") }
             
             // Configure request so that results are returned before audio recording is finished
@@ -198,10 +216,13 @@ class CLSpeechRecognitionController: UIViewController {
         if audioEngine.isRunning {
             stopRecording()
 //            checkForActionPhrases()
-            self.dismiss(animated: true) {
-                self.delegate?.recognizedFromSpeech(text: self.searchLabel.text)
+            if searchLabel.text?.count ?? 0 > 0 {
+                self.dismiss(animated: true) {
+                    self.delegate?.recognizedFromSpeech(text: self.searchLabel.text)
+                }
+            } else {
+                indicatorLabel.text = "Didn't catch that. Tap mic and try again."
             }
-            
         }
     }
     
@@ -209,6 +230,9 @@ class CLSpeechRecognitionController: UIViewController {
     func stopRecording() {
         audioEngine.stop()
         recognitionRequest?.endAudio()
+        
+        self.stopPulseAnimation()
+        self.micBtn.isEnabled = true
         // Cancel the previous task if it's running
         if let recognitionTask = recognitionTask {
             recognitionTask.cancel()
@@ -217,6 +241,7 @@ class CLSpeechRecognitionController: UIViewController {
     }
     
     @objc func micBtnTapped(_ sender: UIButton) {
+        indicatorLabel.text = "Listening..."
         do {
             try startRecording()
         } catch {
