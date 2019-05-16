@@ -99,6 +99,14 @@ class CLSpeechRecognitionController: UIViewController {
         micBtn.widthAnchor.constraint(equalToConstant: 60).isActive = true
         micBtn.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
+        let pulse = PulseAnimation(numberOfPulse: Float.infinity, radius: 100, postion: micBtn.center)
+        pulse.animationDuration = 1.0
+        pulse.backgroundColor = #colorLiteral(red: 0.2247976189, green: 0.4235115114, blue: 1, alpha: 1)
+        self.view.layer.insertSublayer(pulse, below: self.view.layer)
+        let pulse1 = PulseAnimation(numberOfPulse: 15, radius: 200, postion: micBtn.center)
+        pulse1.animationDuration = 1.4
+        pulse1.backgroundColor = #colorLiteral(red: 1, green: 0.3653766513, blue: 0.1507387459, alpha: 1)
+        self.view.layer.insertSublayer(pulse1, below: self.view.layer)
         
         searchLabel.translatesAutoresizingMaskIntoConstraints = false
         searchLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
