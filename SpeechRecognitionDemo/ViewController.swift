@@ -9,12 +9,12 @@
 import UIKit
 
 class ViewController: UIViewController {
+    let label = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Speech Recoginition Demo"
         
-        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.textColor = .lightGray
@@ -41,6 +41,7 @@ class ViewController: UIViewController {
     
     @objc func voiceSearchBtnTapped(_ sender: UIButton) {
         let voiceRecognitionCtl = CLSpeechRecognitionController()
+        voiceRecognitionCtl.delegate = self
         self.present(voiceRecognitionCtl, animated: true, completion: nil)
     }
 
@@ -48,7 +49,12 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+}
 
 
+extension ViewController: ISpeechRecognizerDelegate {
+    func recognizedFromSpeech(text: String?) {
+        label.text = text
+    }
 }
 

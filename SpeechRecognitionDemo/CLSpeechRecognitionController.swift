@@ -9,6 +9,10 @@
 import UIKit
 import Speech
 
+protocol ISpeechRecognizerDelegate {
+    func recognizedFromSpeech(text: String?)
+}
+
 class CLSpeechRecognitionController: UIViewController {
     
     let searchLabel = UILabel()
@@ -17,6 +21,8 @@ class CLSpeechRecognitionController: UIViewController {
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
     var speechResult = SFSpeechRecognitionResult()
+    
+    var delegate: ISpeechRecognizerDelegate?
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -117,15 +123,13 @@ class CLSpeechRecognitionController: UIViewController {
         dismissBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
         dismissBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         dismissBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
-        
-        
         speechRecognizer.delegate = self
     }
     
     
     private func startRecording() throws {
         if !audioEngine.isRunning {
-            let timer = Timer(timeInterval: 30.0, target: self, selector: #selector(timerEnded), userInfo: nil, repeats: false)
+            let timer = Timer(timeInterval: 5.0, target: self, selector: #selector(timerEnded), userInfo: nil, repeats: false)
             RunLoop.current.add(timer, forMode: .commonModes)
             
             let audioSession = AVAudioSession.sharedInstance()
@@ -147,7 +151,7 @@ class CLSpeechRecognitionController: UIViewController {
                 var isFinal = false
                 
                 if let result = result {
-                    print("result: \(result.isFinal)")
+//                    print("result: \(result.isFinal)")
                     isFinal = result.isFinal
                     
                     self.speechResult = result
@@ -172,7 +176,7 @@ class CLSpeechRecognitionController: UIViewController {
                 self.recognitionRequest?.append(buffer)
             }
             
-            print("Begin recording")
+//            print("Begin recording")
             audioEngine.prepare()
             try audioEngine.start()
             
@@ -186,6 +190,10 @@ class CLSpeechRecognitionController: UIViewController {
         if audioEngine.isRunning {
             stopRecording()
 //            checkForActionPhrases()
+            self.dismiss(animated: true) {
+                self.delegate?.recognizedFromSpeech(text: self.searchLabel.text)
+            }
+            
         }
     }
     
@@ -209,6 +217,7 @@ class CLSpeechRecognitionController: UIViewController {
     }
     
     @objc func dismissBtnTapped(_ sender: UIButton) {
+        stopRecording()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -225,197 +234,10 @@ class CLSpeechRecognitionController: UIViewController {
 
 extension CLSpeechRecognitionController: SFSpeechRecognizerDelegate {
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
-        print("Recognizer availability changed: \(available)")
-        
+//        print("Recognizer availability changed: \(available)")
         if !available {
            showTryAgainAlert()
         }
     }
 }
-
-
-
-/*
- 
- import UIKit
- import Speech
- 
- class CLSearchBar: UIView {
- 
- let backButton = UIButton(type: UIButtonType.roundedRect)
- let searchField = UITextField()
- 
- convenience init() {
- self.init(frame: CGRect.zero)
- }
- 
- override init(frame: CGRect) {
- super.init(frame: frame)
- self.backgroundColor = .white
- self.layer.cornerRadius = 5.0
- 
- backButton.translatesAutoresizingMaskIntoConstraints = false
- backButton.setTitle("\u{e079}", for: UIControlState.normal)
- backButton.titleLabel?.font = UIFont.iconFont(ofSize: 22)
- self.addSubview(backButton)
- 
- backButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
- backButton.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
- backButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
- backButton.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
- 
- searchField.translatesAutoresizingMaskIntoConstraints = false
- //        let searchFieldPlaceholder = NSAttributedString(string: " Search", attributes: [NSAttributedStringKey.foregroundColor: UIColor.orange])
- //        searchField.attributedPlaceholder = searchFieldPlaceholder
- //        searchField.tintColor = .orange
- searchField.becomeFirstResponder()
- searchField.returnKeyType = .search
- searchField.autocorrectionType = .no
- searchField.clearButtonMode = .always
- self.addSubview(searchField)
- 
- searchField.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
- searchField.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8).isActive = true
- searchField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
- searchField.heightAnchor.constraint(equalTo: backButton.heightAnchor).isActive = true
- 
- //        searchField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -50).isActive = true
- 
- // TODO:
- /*if #available(iOS 10.0, *) {
- let microphoneButton = CLSearchBarMicButton(searchBar: searchField)
- microphoneButton.translatesAutoresizingMaskIntoConstraints = false
- self.addSubview(microphoneButton)
- 
- microphoneButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
- microphoneButton.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
- microphoneButton.widthAnchor.constraint(equalTo: backButton.widthAnchor).isActive = true
- microphoneButton.heightAnchor.constraint(equalTo: backButton.heightAnchor).isActive = true
- //        speechRecognizer.delegate = self
- } else {
- // Fallback on earlier versions
- }*/
- 
- }
- 
- required init?(coder aDecoder: NSCoder) {
- fatalError("init(coder:) has not been implemented")
- }
- 
- }
- 
- @available(iOS 10.0, *)
- class CLSearchBarMicButton: UIButton, SFSpeechRecognizerDelegate {
- let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
- var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
- var recognitionTask: SFSpeechRecognitionTask?
- let audioEngine = AVAudioEngine()
- var searchBar: UITextField?
- 
- override var buttonType: UIButtonType {
- return .roundedRect
- }
- 
- convenience init(searchBar: UITextField) {
- self.init(frame: CGRect.zero)
- self.searchBar = searchBar
- }
- 
- override init(frame: CGRect) {
- super.init(frame: frame)
- self.setImage(UIImage.init(named: "microphone.png"), for: UIControlState.normal)
- self.tintColor = .orange
- self.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
- self.addTarget(self, action: #selector(microphoneButtonTapped), for: UIControlEvents.touchUpInside)
- self.speechRecognizer.delegate = self
- }
- 
- @objc func microphoneButtonTapped() {
- SFSpeechRecognizer.requestAuthorization { authStatus in
- 
- }
- if audioEngine.isRunning {
- audioEngine.stop()
- recognitionRequest?.endAudio()
- self.tintColor = .orange
- } else {
- try! startRecording()
- self.tintColor = .red
- }
- }
- 
- private func startRecording() throws {
- // Cancel the previous task if it's running.
- if let recognitionTask = recognitionTask {
- recognitionTask.cancel()
- self.recognitionTask = nil
- }
- 
- let audioSession = AVAudioSession.sharedInstance()
- try audioSession.setCategory(AVAudioSessionCategoryRecord)
- try audioSession.setMode(AVAudioSessionModeMeasurement)
- try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
- 
- recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
- 
- //        guard let inputNode = audioEngine.inputNode else { fatalError("Audio engine has no input node") }
- let inputNode = audioEngine.inputNode
- guard let recognitionRequest = recognitionRequest else { fatalError("Unable to created a SFSpeechAudioBufferRecognitionRequest object") }
- 
- // Configure request so that results are returned before audio recording is finished
- recognitionRequest.shouldReportPartialResults = true
- 
- // A recognition task represents a speech recognition session.
- // We keep a reference to the task so that it can be cancelled.
- recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
- var isFinal = false
- 
- if let result = result {
- self.searchBar?.text = result.bestTranscription.formattedString
- isFinal = result.isFinal
- }
- //            else if let error = error {
- //                CLAlertView.showAlert(alertMessage: "There has been a speech recognition error.")
- //                print(error)
- //            }
- 
- if error != nil || isFinal {
- self.audioEngine.stop()
- inputNode.removeTap(onBus: 0)
- self.tintColor = .orange
- self.recognitionRequest = nil
- self.recognitionTask = nil
- }
- }
- 
- let recordingFormat = inputNode.outputFormat(forBus: 0)
- inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
- self.recognitionRequest?.append(buffer)
- }
- audioEngine.prepare()
- 
- try audioEngine.start()
- searchBar?.becomeFirstResponder()
- //        searchField.text = "(Go ahead, I'm listening)"
- }
- 
- // MARK: SFSpeechRecognizerDelegate
- public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
- if available {
- self.isEnabled = true
- } else {
- self.isEnabled = false
- }
- }
- 
- 
- required init?(coder aDecoder: NSCoder) {
- fatalError("init(coder:) has not been implemented")
- }
- }
- 
-
- 
- */
-
 
