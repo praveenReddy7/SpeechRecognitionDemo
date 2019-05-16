@@ -75,6 +75,7 @@ class CLSpeechRecognitionController: UIViewController {
         indicatorLabel.translatesAutoresizingMaskIntoConstraints = false
         indicatorLabel.text = "Listening..."
         indicatorLabel.textColor = .white
+        indicatorLabel.numberOfLines = 2
         view.addSubview(indicatorLabel)
         
         indicatorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
@@ -86,7 +87,7 @@ class CLSpeechRecognitionController: UIViewController {
                            attribute: .centerY,
                            multiplier: 0.3,
                            constant: 0).isActive = true
-        indicatorLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        indicatorLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         micBtn.translatesAutoresizingMaskIntoConstraints = false
         micBtn.setImage(#imageLiteral(resourceName: "mic_image"), for: .normal)
@@ -126,7 +127,7 @@ class CLSpeechRecognitionController: UIViewController {
             indicatorLabel.font = UIFont.systemFont(ofSize: 26, weight: .light)
             searchLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         } else {
-            indicatorLabel.font = UIFont.systemFont(ofSize: 16, weight: .light)
+            indicatorLabel.font = UIFont.systemFont(ofSize: 20, weight: .light)
             searchLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         }
     }
@@ -229,15 +230,17 @@ class CLSpeechRecognitionController: UIViewController {
     
     func stopRecording() {
         audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: 0)
         recognitionRequest?.endAudio()
         
-        self.stopPulseAnimation()
-        self.micBtn.isEnabled = true
         // Cancel the previous task if it's running
         if let recognitionTask = recognitionTask {
             recognitionTask.cancel()
             self.recognitionTask = nil
+            self.recognitionRequest = nil
         }
+        self.stopPulseAnimation()
+        self.micBtn.isEnabled = true
     }
     
     @objc func micBtnTapped(_ sender: UIButton) {
