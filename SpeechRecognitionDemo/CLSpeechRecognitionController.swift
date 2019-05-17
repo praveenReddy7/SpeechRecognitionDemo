@@ -66,15 +66,15 @@ class CLSpeechRecognitionController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .clear
-        self.view.isOpaque = false
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        self.modalTransitionStyle = .crossDissolve
-        self.modalPresentationStyle = .overCurrentContext
+        self.view.backgroundColor = .white
+//        self.view.isOpaque = false
+//        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+//        self.modalTransitionStyle = .crossDissolve
+//        self.modalPresentationStyle = .overCurrentContext
         
         indicatorLabel.translatesAutoresizingMaskIntoConstraints = false
         indicatorLabel.text = "Listening..."
-        indicatorLabel.textColor = .white
+        indicatorLabel.textColor = .gray
         indicatorLabel.numberOfLines = 2
         view.addSubview(indicatorLabel)
         
@@ -85,7 +85,7 @@ class CLSpeechRecognitionController: UIViewController {
                            relatedBy: .equal,
                            toItem: view,
                            attribute: .centerY,
-                           multiplier: 0.3,
+                           multiplier: 0.2,
                            constant: 0).isActive = true
         indicatorLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
@@ -100,7 +100,7 @@ class CLSpeechRecognitionController: UIViewController {
         micBtn.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         searchLabel.translatesAutoresizingMaskIntoConstraints = false
-        searchLabel.textColor = .white
+        searchLabel.textColor = .gray
         searchLabel.numberOfLines = 0
         view.addSubview(searchLabel)
         
@@ -113,7 +113,7 @@ class CLSpeechRecognitionController: UIViewController {
         dismissBtn.translatesAutoresizingMaskIntoConstraints = false
         dismissBtn.titleLabel?.font = UIFont(name: "crm", size: 28)
         dismissBtn.setTitle("\u{e0ba}", for: .normal)
-        dismissBtn.setTitleColor(UIColor.white, for: .normal)
+        dismissBtn.setTitleColor(UIColor.gray, for: .normal)
         dismissBtn.addTarget(self, action: #selector(dismissBtnTapped(_:)), for: .touchUpInside)
         view.addSubview(dismissBtn)
         
@@ -151,10 +151,11 @@ class CLSpeechRecognitionController: UIViewController {
             pulse.removeFromSuperlayer()
         }
     }
+    var recordTimer: Timer?
     
     private func startRecording() throws {
         if !audioEngine.isRunning {
-            let timer = Timer(timeInterval: 5.0, target: self, selector: #selector(timerEnded), userInfo: nil, repeats: false)
+            let timer = Timer(timeInterval: 10.0, target: self, selector: #selector(timerEnded), userInfo: nil, repeats: false)
             RunLoop.current.add(timer, forMode: .commonModes)
             self.startPulseAnimation()
             self.micBtn.isEnabled = false
@@ -178,12 +179,17 @@ class CLSpeechRecognitionController: UIViewController {
                 var isFinal = false
                 
                 if let result = result {
+                    self.recordTimer?.invalidate()
+                    self.recordTimer = nil
 //                    print("result: \(result.isFinal)")
                     isFinal = result.isFinal
                     
                     self.speechResult = result
                     self.searchLabel.text = result.bestTranscription.formattedString
                     
+                    /* Adding timer at the first response and waiting 2sec for further response if user didn't speak with in 2sec, then it will call timerEnded. */
+                    self.recordTimer = Timer(timeInterval: 2.0, target: self, selector: #selector(self.timerEnded), userInfo: nil, repeats: false)
+                    RunLoop.current.add(self.recordTimer!, forMode: .commonModes)
                 }
                 
                 if error != nil || isFinal {
@@ -211,6 +217,7 @@ class CLSpeechRecognitionController: UIViewController {
         }
         
     }
+    
     
     @objc func timerEnded() {
         // If the audio recording engine is running stop it and remove the SFSpeechRecognitionTask

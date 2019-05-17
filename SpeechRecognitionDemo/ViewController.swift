@@ -88,6 +88,7 @@ extension ViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         let voiceRecognitionCtl = CLSpeechRecognitionController()
         voiceRecognitionCtl.delegate = self
+        voiceRecognitionCtl.modalPresentationStyle = .formSheet
         self.present(voiceRecognitionCtl, animated: true, completion: nil)
     }
     
