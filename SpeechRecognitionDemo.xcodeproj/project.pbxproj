@@ -15,6 +15,7 @@
 		AC659CFA228C256000629641 /* CLSpeechRecognitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC659CF9228C256000629641 /* CLSpeechRecognitionController.swift */; };
 		AC659CFC228C265800629641 /* crm.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC659CFB228C265800629641 /* crm.ttf */; };
 		AC7AE269228D1E2000BEB942 /* PulseAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7AE268228D1E2000BEB942 /* PulseAnimation.swift */; };
+		AC815C31228E7DB60015445C /* microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = AC815C30228E7DB60015445C /* microphone.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		AC659CFB228C265800629641 /* crm.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = crm.ttf; sourceTree = "<group>"; };
 		AC7AE268228D1E2000BEB942 /* PulseAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulseAnimation.swift; sourceTree = "<group>"; };
 		AC7AE26B228D24C400BEB942 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		AC815C30228E7DB60015445C /* microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = microphone.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				AC659CF9228C256000629641 /* CLSpeechRecognitionController.swift */,
 				AC7AE268228D1E2000BEB942 /* PulseAnimation.swift */,
 				AC659CFB228C265800629641 /* crm.ttf */,
+				AC815C30228E7DB60015445C /* microphone.png */,
 				AC659CEB228C1C0000629641 /* Main.storyboard */,
 				AC659CEE228C1C0600629641 /* Assets.xcassets */,
 				AC659CF0228C1C0700629641 /* LaunchScreen.storyboard */,
@@ -145,6 +148,7 @@
 				AC659CFC228C265800629641 /* crm.ttf in Resources */,
 				AC659CEF228C1C0600629641 /* Assets.xcassets in Resources */,
 				AC659CED228C1C0000629641 /* Main.storyboard in Resources */,
+				AC815C31228E7DB60015445C /* microphone.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
